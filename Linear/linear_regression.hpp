@@ -12,13 +12,13 @@ class LinearRegression
     
     public:    
         LinearRegression(int maxIter=250000) : weights(Eigen::ArrayXXf()), nExamples(0), nDims(0), hasBeenFit(false), maxIter(maxIter), learningRate(0) {};
-        void fit(const Eigen::ArrayXXf& x, const Eigen::ArrayXXf& y, bool normal=true, float lr=0.0001);
+        void fit(const Eigen::ArrayXXf& x, const Eigen::ArrayXXf& y, bool lls=true, float lr=0.0001);
         Eigen::ArrayXXf predict(const Eigen::ArrayXXf& x);
 
 
 };
 
-void LinearRegression::fit(const Eigen::ArrayXXf& x, const Eigen::ArrayXXf& y, bool normal, float lr)
+void LinearRegression::fit(const Eigen::ArrayXXf& x, const Eigen::ArrayXXf& y, bool lls, float lr)
 {
     nExamples = x.rows();
     nDims = x.cols();
@@ -27,13 +27,9 @@ void LinearRegression::fit(const Eigen::ArrayXXf& x, const Eigen::ArrayXXf& y, b
     Eigen::ArrayXXf fitX = Eigen::ArrayXXf::Ones(nExamples, nDims+1);
     fitX.block(0, 1, nExamples, nDims) = x;
     
-    if(normal)
+    if(lls)
     {
-        Eigen::MatrixXf solution = fitX.matrix().transpose();
-        solution *= fitX.matrix();
-        solution = solution.completeOrthogonalDecomposition().pseudoInverse();
-        solution *= fitX.matrix().transpose();
-        solution *= y.matrix();
+        Eigen::MatrixXf solution = fitX.matrix().bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(y.matrix());
         weights = solution.array();
     }
     else

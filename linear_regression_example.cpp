@@ -18,7 +18,7 @@ int main()
     r.fit(train_X, train_y);
     Eigen::ArrayXXf pred = r.predict(test_X);
 
-    std::cout << "MEAN ABSOLUTE ERROR, normal equation: " << (test_y - pred).abs().mean() << std::endl;
+    std::cout << "MEAN ABSOLUTE ERROR, linear least squares: " << (test_y - pred).abs().mean() << std::endl;
 
     // Fit via gradient descent
     r.fit(train_X, train_y, false, 0.000001);
