@@ -4,9 +4,10 @@ A repository where I keep the Machine Learning algorithms I've written in C++. T
 One of the goals of starting this little exploration was getting to work with the [Eigen](https://eigen.tuxfamily.org/) library. I'm still wrapping my head around it, so this might not be the prettiest Eigen code you've ever seen.
 
 ## Running the code
+**[UPDATE 20/06/2026]:** I've updated the code to be compatible with Eigen 5.0.0.
 
 The code assumes that Eigen is available on `./Eigen`.
-To compile the code, use `g++ -I ./Eigen file.cpp` and then run `a.out`. You might also want to turn on optimizations, as per the recommendations of the Eigen developers.
+To compile the code, use `clang++ -I ./Eigen file.cpp` and then run `a.out`. You might also want to turn on optimizations, as per the recommendations of the Eigen developers.
 
 If you have Eigen installed system-wide, just change the includes and remove the -I flag from the compiler invocation.
 
