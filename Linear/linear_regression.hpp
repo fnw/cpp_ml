@@ -33,21 +33,24 @@ void LinearRegression::fit(const Eigen::ArrayXXf &x, const Eigen::ArrayXXf &y,
             y.matrix());
     weights = solution.array();
   } else {
-    Eigen::ArrayXXf solution = Eigen::ArrayXXf::Zero(nDims + 1, 1);
-    Eigen::ArrayXXf error = Eigen::ArrayXXf::Ones(nDims + 1, 1);
+    Eigen::MatrixXf matX = fitX.matrix();
+    Eigen::MatrixXf matY = y.matrix();
+    Eigen::MatrixXf solution = Eigen::MatrixXf::Zero(nDims + 1, 1);
+    Eigen::MatrixXf gradient;
 
-    for (int count = 0; count < maxIter && error.abs().mean() > 0.001;
-         ++count) {
-      Eigen::ArrayXXf pred = (fitX.matrix() * solution.matrix()).array();
+    for (int count = 0; count < maxIter; ++count) {
+      Eigen::MatrixXf pred = matX * solution;
 
-      error = (fitX.colwise() * ((pred - y)(Eigen::indexing::all, 0)))
-                  .colwise()
-                  .sum();
+      gradient = matX.transpose() * (pred - matY);
 
-      solution -= learningRate * error.transpose();
+      solution -= learningRate * gradient;
+
+      if (gradient.array().abs().mean() <= 0.001) {
+        break;
+      }
     }
 
-    weights = solution;
+    weights = solution.array();
   }
 }
 
